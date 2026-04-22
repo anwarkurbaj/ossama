@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نوطة أسامة ملاك - English</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #112240;
+    --blue: #1a3a6b;
+    --gold: #c9a84c;
+    --gold2: #f0c96e;
+    --cream: #f8f4ec;
+    --text: #e8e0d0;
+    --red: #c0392b;
+    --green: #27ae60;
+    --card: rgba(255,255,255,0.05);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== BACKGROUND ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(26,58,107,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,168,76,0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: var(--navy);
+  }
+
+  .auth-box {
+    background: var(--navy2);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 50px 45px;
+    width: 420px;
+    max-width: 95vw;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(201,168,76,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 35px;
+  }
+
+  .auth-logo h1 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .auth-logo p {
+    color: rgba(232,224,208,0.6);
+    font-size: 0.9rem;
+    margin-top: 6px;
+  }
+
+  .auth-tabs {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 30px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s;
+    color: rgba(232,224,208,0.5);
+    border: none;
+    background: none;
+  }
+
+  .auth-tab.active {
+    background: var(--blue);
+    color: var(--gold);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.88rem;
+    color: rgba(232,224,208,0.7);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .form-group input {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    text-align: right;
+    transition: border-color 0.3s;
+    outline: none;
+  }
+
+  .form-group input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--navy);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 5px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201,168,76,0.4);
+  }
+
+  .auth-msg {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    min-height: 20px;
+  }
+
+  .auth-msg.error { color: #e74c3c; }
+  .auth-msg.success { color: var(--green); }
+
+  /* ===== SETUP SCREEN ===== */
+  #setup-screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    background: var(--navy);
+    flex-direction: column;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .setup-box {
+    background: var(--navy2);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 50px 40px;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .setup-box h2 {
+    color: var(--gold);
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .setup-box p {
+    color: rgba(232,224,208,0.7);
+    line-height: 1.8;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+  }
+
+  .code-block {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: left;
+    direction: ltr;
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: #90caf9;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 15px 0;
+    white-space: pre;
+  }
+
+  .config-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .config-inputs input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: monospace;
+    font-size: 0.88rem;
+    direction: ltr;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .config-inputs input:focus { border-color: var(--gold); }
+
+  /* ===== MAIN APP ===== */
+  #main-app {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    background: rgba(17,34,64,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 65px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .nav-brand {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--gold);
+  }
+
+  .nav-brand span {
+    color: var(--text);
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin-right: 10px;
+  }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .nav-username {
+    font-size: 0.9rem;
+    color: rgba(232,224,208,0.7);
+  }
+
+  .nav-username strong { color: var(--gold2); }
+
+  .btn-logout {
+    background: rgba(192,57,43,0.2);
+    border: 1px solid rgba(192,57,43,0.4);
+    color: #e74c3c;
+    padding: 7px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.88rem;
+    transition: all 0.3s;
+  }
+
+  .btn-logout:hover { background: rgba(192,57,43,0.4); }
+
+  /* NAV TABS */
+  .nav-tabs {
+    background: var(--navy2);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    display: flex;
+    padding: 0 30px;
+    gap: 5px;
+    overflow-x: auto;
+  }
+
+  .nav-tab {
+    padding: 14px 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(232,224,208,0.5);
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+    white-space: nowrap;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* CONTENT */
+  .content {
+    padding: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* SECTION CARDS */
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .lesson-card {
+    background: var(--navy2);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+  }
+
+  .lesson-card:hover { border-color: rgba(201,168,76,0.35); }
+
+  .lesson-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold2);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rule-box {
+    background: rgba(26,58,107,0.4);
+    border-right: 3px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 15px 20px;
+    margin: 12px 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .formula {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 10px 18px;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 1rem;
+    color: var(--gold2);
+    margin: 8px 0;
+    direction: ltr;
+  }
+
+  .example {
+    background: rgba(39,174,96,0.08);
+    border: 1px solid rgba(39,174,96,0.2);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 6px 0;
+    font-size: 0.92rem;
+    direction: ltr;
+  }
+
+  .example .label {
+    color: var(--green);
+    font-weight: 700;
+    margin-left: 8px;
+  }
+
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .kw {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    direction: ltr;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .vocab-item {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+  }
+
+  .vocab-en { direction: ltr; color: #90caf9; font-weight: 600; }
+  .vocab-ar { color: rgba(232,224,208,0.7); font-size: 0.82rem; }
+
+  /* TABLE */
+  .nice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 0.9rem;
+  }
+
+  .nice-table th {
+    background: rgba(26,58,107,0.6);
+    color: var(--gold);
+    padding: 12px 15px;
+    text-align: right;
+    font-weight: 600;
+  }
+
+  .nice-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .nice-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ===== QUIZ ===== */
+  .quiz-card {
+    background: var(--navy2);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .quiz-header h3 {
+    font-size: 1.15rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .quiz-progress {
+    font-size: 0.85rem;
+    color: rgba(232,224,208,0.5);
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin-bottom: 25px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .question-text {
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 20px;
+    line-height: 1.6;
+    direction: ltr;
+  }
+
+  .question-text.ar { direction: rtl; }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 13px 18px;
+    cursor: pointer;
+    direction: ltr;
+    font-size: 0.95rem;
+    transition: all 0.25s;
+    text-align: left;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .option:hover:not(.disabled) {
+    border-color: rgba(201,168,76,0.4);
+    background: rgba(201,168,76,0.08);
+  }
+
+  .option.correct {
+    background: rgba(39,174,96,0.15);
+    border-color: var(--green);
+    color: #a8e6c0;
+  }
+
+  .option.wrong {
+    background: rgba(192,57,43,0.15);
+    border-color: var(--red);
+    color: #f1948a;
+  }
+
+  .option.disabled { cursor: default; }
+
+  .explanation {
+    margin-top: 15px;
+    background: rgba(26,58,107,0.4);
+    border-right: 3px solid var(--blue);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    display: none;
+  }
+
+  .explanation.show { display: block; }
+
+  .quiz-nav {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .btn-nav {
+    background: var(--blue);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--text);
+    padding: 10px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .btn-nav:hover { background: rgba(26,58,107,0.8); border-color: var(--gold); }
+
+  .btn-restart {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold2);
+    padding: 10px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .btn-restart:hover { background: rgba(201,168,76,0.25); }
+
+  .score-display {
+    background: var(--navy2);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    display: none;
+  }
+
+  .score-display.show { display: block; }
+
+  .score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--gold);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    background: rgba(201,168,76,0.1);
+  }
+
+  .score-num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .score-label { font-size: 0.75rem; color: rgba(232,224,208,0.5); }
+
+  .score-msg {
+    font-size: 1.2rem;
+    color: var(--text);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .score-sub { color: rgba(232,224,208,0.6); font-size: 0.9rem; margin-bottom: 25px; }
+
+  /* QUIZ SELECTOR */
+  .quiz-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .quiz-btn {
+    background: var(--navy2);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 14px;
+    padding: 20px;
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.3s;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .quiz-btn:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  }
+
+  .quiz-btn.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  .quiz-btn-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold2);
+    margin-bottom: 6px;
+  }
+
+  .quiz-btn-count {
+    font-size: 0.82rem;
+    color: rgba(232,224,208,0.5);
+  }
+
+  #quiz-area { display: none; }
+
+  /* RESPONSIVE */
+  @media(max-width: 600px) {
+    .content { padding: 15px; }
+    .navbar { padding: 0 15px; }
+    .nav-tabs { padding: 0 10px; }
+    .auth-box { padding: 35px 25px; }
+  }
+
+  /* LOADING */
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(201,168,76,0.3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.2);
+    color: var(--gold2);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SETUP SCREEN ===== -->
+<div id="setup-screen">
+  <div class="setup-box">
+    <h2>⚙️ إعداد قاعدة البيانات</h2>
+    <p>قبل استخدام التطبيق، أنت بحاجة إلى ربطه بـ <strong>Supabase</strong> مجاناً.</p>
+    <p style="color:var(--gold2);">📋 خطوات الإعداد:</p>
+    <div class="code-block">1. روح على supabase.com وأنشئ حساب مجاني
+2. أنشئ مشروع جديد
+3. اذهب إلى SQL Editor وشغّل هذا الكود:</div>
+    <div class="code-block">CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE quiz_results (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id),
+  quiz_name TEXT,
+  score INT,
+  total INT,
+  created_at TIMESTAMP DEFAULT NOW()
+);</div>
+    <p>4. اذهب إلى Settings → API وانسخ:</p>
+    <div class="config-inputs">
+      <input type="text" id="setup-url" placeholder="Project URL  (https://xxxx.supabase.co)" dir="ltr">
+      <input type="text" id="setup-key" placeholder="anon public key" dir="ltr">
+    </div>
+    <p style="font-size:0.82rem;color:rgba(232,224,208,0.4);">⚠️ ملاحظة: تم إدخال المفاتيح مباشرة في الكود (الأسطر 1309-1310)، يمكنك تعدليها من هناك لاحقاً.</p>
+    <button class="btn-primary" onclick="saveConfig()">حفظ والمتابعة ←</button>
+    <div class="auth-msg" id="setup-msg"></div>
+  </div>
+</div>
+
+<!-- ===== AUTH SCREEN ===== -->
+<div id="auth-screen" style="display:none;">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <h1>📚 نوطة أسامة ملاك</h1>
+      <p>English — بكالوريا علمي / أدبي</p>
+    </div>
+
+    <div id="login-form">
+      <div class="form-group">
+        <label>اسم المستخدم</label>
+        <input type="text" id="login-username" placeholder="ادخل اسم المستخدم" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="login-password" placeholder="ادخل كلمة المرور" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" onclick="login()">
+        <span id="login-btn-text">دخول ←</span>
+      </button>
+    </div>
+
+
+    <div class="auth-msg" id="auth-msg"></div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="main-app">
+  <nav class="navbar">
+    <div class="nav-brand">📚 نوطة أسامة ملاك</div>
+    <div class="nav-user">
+      <span class="nav-username">مرحباً، <strong id="display-username"></strong></span>
+      <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </nav>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('grammar')">✏️ القواعد</button>
+    <button class="nav-tab" onclick="showPage('vocab')">📖 المفردات</button>
+    <button class="nav-tab" onclick="showPage('quiz')">🎯 الاختبارات</button>
+    <button class="nav-tab" onclick="showPage('results')">📊 نتائجي</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== PAGE: GRAMMAR ===== -->
+    <div class="page active" id="page-grammar">
+      <div class="section-title">✏️ شرح القواعد — Tenses & Grammar</div>
+
+      <!-- Present Simple -->
+      <div class="lesson-card">
+        <h3>1️⃣ Present Simple <span class="badge">الحاضر البسيط</span></h3>
+        <div class="rule-box">
+          يُستخدم للروتين اليومي والحقائق العلمية
+          <br>
+          <div class="formula">Subject + V1 (+ s/es for he/she/it)</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">always</span><span class="kw">usually</span><span class="kw">often</span>
+          <span class="kw">sometimes</span><span class="kw">never</span><span class="kw">rarely</span>
+          <span class="kw">seldom</span><span class="kw">every day</span><span class="kw">once / twice</span>
+        </div>
+        <div class="example"><span class="label">✅</span> They play tennis every day.</div>
+        <div class="example"><span class="label">✅</span> He usually rings at this time.</div>
+        <div class="example"><span class="label">✅</span> The sun rises in the east. (حقيقة)</div>
+      </div>
+
+      <!-- Past Simple -->
+      <div class="lesson-card">
+        <h3>2️⃣ Past Simple <span class="badge">الماضي البسيط</span></h3>
+        <div class="rule-box">
+          يُستخدم لحدث وقع وانتهى في وقت محدد في الماضي
+          <br>
+          <div class="formula">Subject + V2</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">yesterday</span><span class="kw">last week/month</span>
+          <span class="kw">ago</span><span class="kw">in 2005</span><span class="kw">from...to</span>
+        </div>
+        <div class="example"><span class="label">✅</span> She moved to Damascus last year.</div>
+      </div>
+
+      <!-- Present Continuous -->
+      <div class="lesson-card">
+        <h3>3️⃣ Present Continuous <span class="badge">الحاضر المستمر</span></h3>
+        <div class="rule-box">
+          يُستخدم للحدث الذي يحدث الآن (لحظة الكلام)
+          <br>
+          <div class="formula">is / am / are + V-ing</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">now</span><span class="kw">at the moment</span><span class="kw">today</span>
+          <span class="kw">nowadays</span><span class="kw">Look!</span><span class="kw">Listen!</span>
+        </div>
+        <div class="example"><span class="label">✅</span> Be quiet! Someone is studying.</div>
+      </div>
+
+      <!-- Past Continuous -->
+      <div class="lesson-card">
+        <h3>4️⃣ Past Continuous <span class="badge">الماضي المستمر</span></h3>
+        <div class="rule-box">
+          يُستخدم لحدثين متقاطعين في الماضي (حدث كان مستمراً وقاطعه حدث آخر)
+          <br>
+          <div class="formula">was / were + V-ing</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">when</span><span class="kw">while</span><span class="kw">as</span>
+        </div>
+        <div class="example"><span class="label">✅</span> While she <u>was driving</u> to school, she <u>had</u> an accident.</div>
+      </div>
+
+      <!-- Present Perfect -->
+      <div class="lesson-card">
+        <h3>5️⃣ Present Perfect Simple <span class="badge">الحاضر التام</span></h3>
+        <div class="rule-box">
+          يُستخدم للحدث الذي وقع في وقت غير محدد وله أثر في الحاضر
+          <br>
+          <div class="formula">have / has + V3</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">just</span><span class="kw">already</span><span class="kw">yet</span>
+          <span class="kw">ever</span><span class="kw">never</span><span class="kw">so far</span>
+          <span class="kw">in recent years</span>
+        </div>
+        <div class="example"><span class="label">✅</span> I have just finished my work.</div>
+        <div class="example"><span class="label">✅</span> Have you ever played tennis?</div>
+        <table class="nice-table" style="margin-top:15px; direction:ltr;">
+          <tr><th>For (فترة زمنية)</th><th>Since (وقت محدد)</th></tr>
+          <tr><td>an hour</td><td>six o'clock</td></tr>
+          <tr><td>two days</td><td>Sunday</td></tr>
+          <tr><td>three weeks</td><td>last week</td></tr>
+          <tr><td>six years</td><td>2015</td></tr>
+        </table>
+      </div>
+
+      <!-- Present Perfect Continuous -->
+      <div class="lesson-card">
+        <h3>6️⃣ Present Perfect Continuous <span class="badge">الحاضر التام المستمر</span></h3>
+        <div class="rule-box">
+          يُستخدم للحدث الذي وقع وانتهى لكن تركَ آثاراً واضحة
+          <br>
+          <div class="formula">have / has + been + V-ing</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">tired</span><span class="kw">red (face)</span><span class="kw">soft (hands)</span>
+          <span class="kw">all day/night</span><span class="kw">for</span><span class="kw">since</span>
+        </div>
+        <div class="example"><span class="label">✅</span> I have been studying all day. I'm tired.</div>
+      </div>
+
+      <!-- Past Perfect -->
+      <div class="lesson-card">
+        <h3>7️⃣ Past Perfect Simple <span class="badge">الماضي التام</span></h3>
+        <div class="rule-box">
+          يُستخدم لحدثين في الماضي — الأول يأخذ Had+V3 والثاني V2
+          <br>
+          <div class="formula">had + V3</div>
+        </div>
+        <div class="keywords">
+          <span class="kw">before</span><span class="kw">after</span><span class="kw">when</span>
+          <span class="kw">by the time</span><span class="kw">until</span><span class="kw">although</span>
+        </div>
+        <div class="example"><span class="label">✅</span> He <u>had finished</u> his work before he <u>went</u> to bed.</div>
+      </div>
+
+      <!-- Passive Voice -->
+      <div class="lesson-card">
+        <h3>8️⃣ Passive Voice <span class="badge">المبني للمجهول</span></h3>
+        <div class="rule-box">
+          القاعدة الأساسية: <div class="formula">Verb to be + V3</div>
+        </div>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Tense</th><th>Passive Form</th></tr>
+          <tr><td>Present Simple</td><td>am/is/are + V3</td></tr>
+          <tr><td>Past Simple</td><td>was/were + V3</td></tr>
+          <tr><td>Present Continuous</td><td>am/is/are + being + V3</td></tr>
+          <tr><td>Past Continuous</td><td>was/were + being + V3</td></tr>
+          <tr><td>Present Perfect</td><td>have/has + been + V3</td></tr>
+          <tr><td>Past Perfect</td><td>had + been + V3</td></tr>
+          <tr><td>Future</td><td>will + be + V3</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> The dishes <u>are washed</u> every day by Ruba.</div>
+        <div class="example"><span class="label">✅</span> The dishes <u>were washed</u> yesterday by Ruba.</div>
+      </div>
+
+      <!-- Causative -->
+      <div class="lesson-card">
+        <h3>9️⃣ Causative — Having things done <span class="badge">السببية</span></h3>
+        <div class="rule-box">
+          عندما تحصل على خدمة من شخص آخر (لا تفعلها بنفسك)
+          <br>
+          <div class="formula">have / has / had / will have + noun + V3</div>
+        </div>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Original</th><th>Causative</th></tr>
+          <tr><td>I repair the car.</td><td>I have the car repaired.</td></tr>
+          <tr><td>He repairs the car.</td><td>He has the car repaired.</td></tr>
+          <tr><td>He repaired the car.</td><td>He had the car repaired.</td></tr>
+          <tr><td>I will repair the car.</td><td>I will have the car repaired.</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> My father <u>doesn't wash</u> the car himself. → My father <u>has the car washed</u>.</div>
+      </div>
+
+      <!-- Relative Clauses -->
+      <div class="lesson-card">
+        <h3>🔟 Relative Clauses <span class="badge">الأسماء الموصولة</span></h3>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Pronoun</th><th>Usage</th><th>Arabic</th></tr>
+          <tr><td>who / that</td><td>for people</td><td>للعاقل</td></tr>
+          <tr><td>which / that</td><td>for things</td><td>لغير العاقل</td></tr>
+          <tr><td>where</td><td>for places</td><td>للمكان</td></tr>
+          <tr><td>when</td><td>for time</td><td>للزمان</td></tr>
+          <tr><td>whose</td><td>possession</td><td>للملكية</td></tr>
+          <tr><td>whom</td><td>object (people)</td><td>نصب/جر للعاقل</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> A plumber is a person <u>who</u> mends taps.</div>
+        <div class="example"><span class="label">✅</span> That is the author <u>whose</u> books are interesting.</div>
+      </div>
+
+      <!-- Conditionals -->
+      <div class="lesson-card">
+        <h3>1️⃣1️⃣ Conditional Sentences <span class="badge">الشرط</span></h3>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Type</th><th>If clause</th><th>Main clause</th></tr>
+          <tr><td>1st (ممكن)</td><td>V1</td><td>will + V1</td></tr>
+          <tr><td>2nd (غير محتمل)</td><td>V2</td><td>would + V1</td></tr>
+          <tr><td>3rd (مستحيل)</td><td>had + V3</td><td>would have + V3</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> If you study, you <u>will pass</u> your exam.</div>
+        <div class="example"><span class="label">✅</span> If I were you, I <u>would help</u> him.</div>
+        <div class="example"><span class="label">✅</span> If you had studied, you <u>would have passed</u>.</div>
+      </div>
+
+      <!-- Wishes -->
+      <div class="lesson-card">
+        <h3>1️⃣2️⃣ Wishes <span class="badge">التمني</span></h3>
+        <div class="rule-box">
+          التمني يكون دائماً بالماضي — نرجع خطوة للوراء في الزمن
+        </div>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Original</th><th>Wish</th></tr>
+          <tr><td>is/am/are</td><td>were</td></tr>
+          <tr><td>can</td><td>could</td></tr>
+          <tr><td>will</td><td>would</td></tr>
+          <tr><td>V1</td><td>V2</td></tr>
+          <tr><td>V2 (past)</td><td>had + V3</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> My room is small. → I wish my room <u>weren't</u> so small.</div>
+        <div class="example"><span class="label">✅</span> I didn't go. → I wish I <u>had gone</u>.</div>
+      </div>
+
+      <!-- Reported Speech -->
+      <div class="lesson-card">
+        <h3>1️⃣3️⃣ Reported Speech <span class="badge">الكلام المنقول</span></h3>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Direct</th><th>Reported</th></tr>
+          <tr><td>is/am/are</td><td>was/were</td></tr>
+          <tr><td>can</td><td>could</td></tr>
+          <tr><td>will</td><td>would</td></tr>
+          <tr><td>V1</td><td>V2</td></tr>
+          <tr><td>V2</td><td>had + V3</td></tr>
+          <tr><td>I/we/my/our</td><td>he-she/they/his-her/their</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> "I live in Syria" → He said he <u>lived</u> in Syria.</div>
+        <div class="example"><span class="label">✅</span> "Do you live here?" → I asked him <u>if</u> he lived there.</div>
+      </div>
+
+      <!-- Inversion -->
+      <div class="lesson-card">
+        <h3>1️⃣4️⃣ Inversion <span class="badge">التحويل</span></h3>
+        <div class="rule-box">
+          عند بدء الجملة بـ (rarely, never, seldom, hardly, no sooner) يُقلب الفعل المساعد قبل الفاعل
+        </div>
+        <div class="example"><span class="label">✅</span> I seldom go by bus. → <u>Seldom do I</u> go by bus.</div>
+        <div class="example"><span class="label">✅</span> <u>Never have I</u> been to another country.</div>
+        <div class="example"><span class="label">✅</span> <u>Rarely had</u> John visited Palmyra.</div>
+      </div>
+
+      <!-- Modals -->
+      <div class="lesson-card">
+        <h3>1️⃣5️⃣ Modal Verbs <span class="badge">الأفعال المساعدة</span></h3>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Modal</th><th>Negative</th><th>Meaning</th></tr>
+          <tr><td>must</td><td>mustn't</td><td>يجب / ممنوع</td></tr>
+          <tr><td>should</td><td>shouldn't</td><td>ينصح / لا ينصح</td></tr>
+          <tr><td>have to</td><td>don't have to</td><td>ضروري / ليس ضرورياً</td></tr>
+        </table>
+        <div class="example"><span class="label">✅</span> You <u>mustn't</u> smoke here. (ممنوع)</div>
+        <div class="example"><span class="label">✅</span> You <u>don't have to</u> go. (ليس ضرورياً)</div>
+      </div>
+
+      <!-- Phonetics -->
+      <div class="lesson-card">
+        <h3>1️⃣6️⃣ Phonetics — Elision & Stress <span class="badge">الأصوات</span></h3>
+        <div class="rule-box">
+          <strong>الإدغام (Elision):</strong> إذا وقع حرف /d/ أو /t/ بين حرفين ساكنَين لا يُنطق
+          <br>مثال: <span style="color:var(--gold2); direction:ltr; display:inline-block;">lan<u>d</u>lady ← /landlady/</span>
+        </div>
+       
+      </div>
+    </div>
+
+    <!-- ===== PAGE: VOCABULARY ===== -->
+    <div class="page" id="page-vocab">
+      <div class="section-title">📖 المفردات المهمة</div>
+
+      <div class="lesson-card">
+        <h3>🎯 Future Careers — مهن المستقبل</h3>
+        <div class="vocab-grid">
+          <div class="vocab-item"><span class="vocab-en">explore</span><span class="vocab-ar">يستكشف</span></div>
+          <div class="vocab-item"><span class="vocab-en">confidence</span><span class="vocab-ar">ثقة</span></div>
+          <div class="vocab-item"><span class="vocab-en">misguide</span><span class="vocab-ar">يضلل</span></div>
+          <div class="vocab-item"><span class="vocab-en">expectations</span><span class="vocab-ar">توقعات</span></div>
+          <div class="vocab-item"><span class="vocab-en">aptitude</span><span class="vocab-ar">قدرة</span></div>
+          <div class="vocab-item"><span class="vocab-en">psychologists</span><span class="vocab-ar">علماء النفس</span></div>
+          <div class="vocab-item"><span class="vocab-en">remuneration</span><span class="vocab-ar">الأجر</span></div>
+          <div class="vocab-item"><span class="vocab-en">satisfying</span><span class="vocab-ar">مُرضي</span></div>
+          <div class="vocab-item"><span class="vocab-en">demotivation</span><span class="vocab-ar">الإحباط</span></div>
+          <div class="vocab-item"><span class="vocab-en">reveal</span><span class="vocab-ar">يكشف</span></div>
+          <div class="vocab-item"><span class="vocab-en">reject</span><span class="vocab-ar">يرفض</span></div>
+          <div class="vocab-item"><span class="vocab-en">swayed</span><span class="vocab-ar">متأثر</span></div>
+        </div>
+        <h3 style="margin-top:20px;">Phrasal Verbs</h3>
+        <table class="nice-table" style="direction:ltr;">
+          <tr><th>Phrasal Verb</th><th>Meaning</th><th>Example</th></tr>
+          <tr><td>reach out to</td><td>يساعد</td><td>reach out to the poor</td></tr>
+          <tr><td>fit in with</td><td>ينسجم مع</td><td>fit in with workmates</td></tr>
+          <tr><td>get into</td><td>يهتم بـ</td><td>get into writing</td></tr>
+          <tr><td>follow through</td><td>يكمل</td><td>follow through a project</td></tr>
+          <tr><td>run into</td><td>يواجه</td><td>run into troubles</td></tr>
+          <tr><td>keep up with</td><td>يواكب</td><td>keep up with research</td></tr>
+        </table>
+      </div>
+
+      <div class="lesson-card">
+        <h3>💡 Life Choices — خيارات الحياة</h3>
+        <div class="vocab-grid">
+          <div class="vocab-item"><span class="vocab-en">optimism</span><span class="vocab-ar">تفاؤل</span></div>
+          <div class="vocab-item"><span class="vocab-en">monotonous</span><span class="vocab-ar">ممل</span></div>
+          <div class="vocab-item"><span class="vocab-en">accomplishments</span><span class="vocab-ar">إنجازات</span></div>
+          <div class="vocab-item"><span class="vocab-en">vanity</span><span class="vocab-ar">غرور</span></div>
+          <div class="vocab-item"><span class="vocab-en">tolerant</span><span class="vocab-ar">متسامح</span></div>
+          <div class="vocab-item"><span class="vocab-en">humility</span><span class="vocab-ar">تواضع</span></div>
+          <div class="vocab-item"><span class="vocab-en">priority</span><span class="vocab-ar">أولوية</span></div>
+          <div class="vocab-item"><span class="vocab-en">pursuit</span><span class="vocab-ar">ملاحقة</span></div>
+          <div class="vocab-item"><span class="vocab-en">unpredictable</span><span class="vocab-ar">غير متوقع</span></div>
+          <div class="vocab-item"><span class="vocab-en">failure</span><span class="vocab-ar">الفشل</span></div>
+          <div class="vocab-item"><span class="vocab-en">trustful</span><span class="vocab-ar">موثوق</span></div>
+          <div class="vocab-item"><span class="vocab-en">give up</span><span class="vocab-ar">يستسلم</span></div>
+        </div>
+      </div>
+
+      <div class="lesson-card">
+        <h3>🏥 History of Medicine — تاريخ الطب</h3>
+        <div class="vocab-grid">
+          <div class="vocab-item"><span class="vocab-en">empirical</span><span class="vocab-ar">تجريبي</span></div>
+          <div class="vocab-item"><span class="vocab-en">superstitions</span><span class="vocab-ar">أساطير</span></div>
+          <div class="vocab-item"><span class="vocab-en">anatomy</span><span class="vocab-ar">التشريح</span></div>
+          <div class="vocab-item"><span class="vocab-en">germs</span><span class="vocab-ar">جراثيم</span></div>
+          <div class="vocab-item"><span class="vocab-en">antibiotics</span><span class="vocab-ar">مضادات حيوية</span></div>
+          <div class="vocab-item"><span class="vocab-en">radiography</span><span class="vocab-ar">تصوير شعاعي</span></div>
+          <div class="vocab-item"><span class="vocab-en">purging</span><span class="vocab-ar">تطهير</span></div>
+          <div class="vocab-item"><span class="vocab-en">remedies</span><span class="vocab-ar">علاجات</span></div>
+          <div class="vocab-item"><span class="vocab-en">herbs</span><span class="vocab-ar">أعشاب</span></div>
+          <div class="vocab-item"><span class="vocab-en">mythological</span><span class="vocab-ar">أسطوري</span></div>
+          <div class="vocab-item"><span class="vocab-en">inflammation</span><span class="vocab-ar">التهاب</span></div>
+          <div class="vocab-item"><span class="vocab-en">priests</span><span class="vocab-ar">كهنة</span></div>
+        </div>
+      </div>
+
+      <div class="lesson-card">
+        <h3>⚙️ History of Engineering — تاريخ الهندسة</h3>
+        <div class="vocab-grid">
+          <div class="vocab-item"><span class="vocab-en">lever</span><span class="vocab-ar">الرافعة</span></div>
+          <div class="vocab-item"><span class="vocab-en">pulley</span><span class="vocab-ar">بكرة</span></div>
+          <div class="vocab-item"><span class="vocab-en">wheel</span><span class="vocab-ar">عجلة</span></div>
+          <div class="vocab-item"><span class="vocab-en">Renaissance</span><span class="vocab-ar">عصر النهضة</span></div>
+          <div class="vocab-item"><span class="vocab-en">steam engine</span><span class="vocab-ar">محرك بخاري</span></div>
+          <div class="vocab-item"><span class="vocab-en">Industrial Revolution</span><span class="vocab-ar">الثورة الصناعية</span></div>
+          <div class="vocab-item"><span class="vocab-en">mass production</span><span class="vocab-ar">إنتاج بالجملة</span></div>
+          <div class="vocab-item"><span class="vocab-en">aeronautical</span><span class="vocab-ar">طيراني</span></div>
+          <div class="vocab-item"><span class="vocab-en">spaceship</span><span class="vocab-ar">سفينة الفضاء</span></div>
+          <div class="vocab-item"><span class="vocab-en">watermills</span><span class="vocab-ar">طواحين المياه</span></div>
+          <div class="vocab-item"><span class="vocab-en">essential</span><span class="vocab-ar">ضروري</span></div>
+          <div class="vocab-item"><span class="vocab-en">elevate</span><span class="vocab-ar">يرفع</span></div>
+        </div>
+      </div>
+
+      <div class="lesson-card">
+        <h3>📜 History of Poetry — تاريخ الأدب</h3>
+        <div class="vocab-grid">
+          <div class="vocab-item"><span class="vocab-en">metre</span><span class="vocab-ar">البحر</span></div>
+          <div class="vocab-item"><span class="vocab-en">rhyme</span><span class="vocab-ar">القافية</span></div>
+          <div class="vocab-item"><span class="vocab-en">epic</span><span class="vocab-ar">ملحمة</span></div>
+          <div class="vocab-item"><span class="vocab-en">sonnet</span><span class="vocab-ar">السونيتا</span></div>
+          <div class="vocab-item"><span class="vocab-en">satire</span><span class="vocab-ar">ينتقد</span></div>
+          <div class="vocab-item"><span class="vocab-en">elites</span><span class="vocab-ar">النخبة</span></div>
+          <div class="vocab-item"><span class="vocab-en">excavation</span><span class="vocab-ar">حفريات</span></div>
+          <div class="vocab-item"><span class="vocab-en">legacies</span><span class="vocab-ar">إرث</span></div>
+          <div class="vocab-item"><span class="vocab-en">consciousness</span><span class="vocab-ar">الوعي</span></div>
+          <div class="vocab-item"><span class="vocab-en">evoke</span><span class="vocab-ar">يثير</span></div>
+          <div class="vocab-item"><span class="vocab-en">restoration</span><span class="vocab-ar">الاستعادة</span></div>
+          <div class="vocab-item"><span class="vocab-en">imaginative</span><span class="vocab-ar">خيالي</span></div>
+        </div>
+      </div>
+
+      <div class="lesson-card">
+        <h3>🌍 Civil Rights & UN — الحقوق المدنية</h3>
+        <div class="vocab-grid">
+          <div class="vocab-item"><span class="vocab-en">equality</span><span class="vocab-ar">المساواة</span></div>
+          <div class="vocab-item"><span class="vocab-en">discrimination</span><span class="vocab-ar">تمييز</span></div>
+          <div class="vocab-item"><span class="vocab-en">legislation</span><span class="vocab-ar">تشريع</span></div>
+          <div class="vocab-item"><span class="vocab-en">democracy</span><span class="vocab-ar">ديموقراطية</span></div>
+          <div class="vocab-item"><span class="vocab-en">mandatory</span><span class="vocab-ar">إلزامي</span></div>
+          <div class="vocab-item"><span class="vocab-en">sustainable</span><span class="vocab-ar">دائم</span></div>
+          <div class="vocab-item"><span class="vocab-en">humanitarian</span><span class="vocab-ar">إنساني</span></div>
+          <div class="vocab-item"><span class="vocab-en">ratification</span><span class="vocab-ar">تصديق</span></div>
+          <div class="vocab-item"><span class="vocab-en">disbanded</span><span class="vocab-ar">محلولة</span></div>
+          <div class="vocab-item"><span class="vocab-en">disparities</span><span class="vocab-ar">الفروق</span></div>
+          <div class="vocab-item"><span class="vocab-en">insecurity</span><span class="vocab-ar">انعدام الأمان</span></div>
+          <div class="vocab-item"><span class="vocab-en">advocate</span><span class="vocab-ar">يدافع</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: QUIZ ===== -->
+    <div class="page" id="page-quiz">
+      <div class="section-title">🎯 الاختبارات التفاعلية</div>
+
+      <div class="quiz-selector" id="quiz-selector">
+        <div class="quiz-btn" onclick="startQuiz('tenses')">
+          <div class="quiz-btn-title">⏰ الأزمنة</div>
+          <div class="quiz-btn-count">15 سؤال</div>
+        </div>
+        <div class="quiz-btn" onclick="startQuiz('passive')">
+          <div class="quiz-btn-title">🔄 المبني للمجهول</div>
+          <div class="quiz-btn-count">10 أسئلة</div>
+        </div>
+        <div class="quiz-btn" onclick="startQuiz('relative')">
+          <div class="quiz-btn-title">🔗 الأسماء الموصولة</div>
+          <div class="quiz-btn-count">10 أسئلة</div>
+        </div>
+        <div class="quiz-btn" onclick="startQuiz('conditional')">
+          <div class="quiz-btn-title">❓ الشرط والتمني</div>
+          <div class="quiz-btn-count">10 أسئلة</div>
+        </div>
+        <div class="quiz-btn" onclick="startQuiz('vocab')">
+          <div class="quiz-btn-title">📖 المفردات</div>
+          <div class="quiz-btn-count">12 سؤال</div>
+        </div>
+        <div class="quiz-btn" onclick="startQuiz('mixed')">
+          <div class="quiz-btn-title">🎲 مختلط شامل</div>
+          <div class="quiz-btn-count">20 سؤال</div>
+        </div>
+      </div>
+
+      <div id="quiz-area">
+        <div class="quiz-card">
+          <div class="quiz-header">
+            <h3 id="quiz-title">الاختبار</h3>
+            <span class="quiz-progress" id="quiz-progress">0 / 0</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="question-text" id="question-text"></div>
+          <div class="options" id="options-container"></div>
+          <div class="explanation" id="explanation"></div>
+          <div class="quiz-nav">
+            <button class="btn-restart" onclick="backToSelector()">← العودة للقائمة</button>
+            <button class="btn-nav" id="next-btn" onclick="nextQuestion()" style="display:none;">التالي ←</button>
+          </div>
+        </div>
+        <div class="score-display" id="score-display">
+          <div class="score-circle">
+            <div class="score-num" id="score-num">0</div>
+            <div class="score-label">من <span id="score-total">0</span></div>
+          </div>
+          <div class="score-msg" id="score-msg"></div>
+          <div class="score-sub" id="score-sub"></div>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+            <button class="btn-nav" onclick="backToSelector()">← اختبار آخر</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: RESULTS ===== -->
+    <div class="page" id="page-results">
+      <div class="section-title">📊 نتائجي</div>
+      <div class="lesson-card">
+        <div id="results-content">
+          <p style="color:rgba(232,224,208,0.5); text-align:center; padding:30px;">
+            جاري تحميل النتائج...
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-app -->
+
+<script>
+// ===========================
+// CONFIGURATION - ضع هنا مفاتيح Supabase مباشرة
+// ===========================
+let SUPABASE_URL = 'https://kymctdmkavxsiwcbbgml.supabase.co';
+let SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5bWN0ZG1rYXZ4c2l3Y2JiZ21sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MDc3ODIsImV4cCI6MjA5MjM4Mzc4Mn0.haP3SC6GIZ8JWs1FExFdmMToMDwchASYx7YxzxS8H3Y';
+let sbClient = null;
+let currentUser = null;
+let currentQuizData = [];
+let currentQuizIndex = 0;
+let currentQuizScore = 0;
+let currentQuizName = '';
+let answered = false;
+
+// ===========================
+// INIT
+// ===========================
+function init() {
+  const savedUrl = localStorage.getItem('sb_url');
+  const savedKey = localStorage.getItem('sb_key');
+
+  if (savedUrl && savedKey) {
+    SUPABASE_URL = savedUrl;
+    SUPABASE_KEY = savedKey;
+  }
+
+  if (SUPABASE_URL && SUPABASE_KEY) {
+    initSupabase();
+  } else {
+    document.getElementById('setup-screen').style.display = 'flex';
+  }
+}
+
+function initSupabase() {
+  try {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    checkSession();
+  } catch(e) {
+    showSetup();
+  }
+}
+
+function showSetup() {
+  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('auth-screen').style.display = 'none';
+}
+
+function saveConfig() {
+  const url = document.getElementById('setup-url').value.trim();
+  const key = document.getElementById('setup-key').value.trim();
+  const msg = document.getElementById('setup-msg');
+
+  if (!url || !key) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'الرجاء إدخال كلا المفتاحين';
+    return;
+  }
+
+  if (!url.startsWith('https://')) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'الـ URL يجب أن يبدأ بـ https://';
+    return;
+  }
+
+  SUPABASE_URL = url;
+  SUPABASE_KEY = key;
+  localStorage.setItem('sb_url', url);
+  localStorage.setItem('sb_key', key);
+
+  msg.className = 'auth-msg success';
+  msg.textContent = '✅ تم الحفظ...';
+
+  setTimeout(() => {
+    document.getElementById('setup-screen').style.display = 'none';
+    initSupabase();
+  }, 800);
+}
+
+async function checkSession() {
+  const saved = localStorage.getItem('current_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    showApp();
+  } else {
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+}
+
+// ===========================
+// AUTH
+// ===========================
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('auth-msg').textContent = '';
+}
+function getDeviceId() {
+  let id = localStorage.getItem('device_fingerprint');
+  if (!id) {
+    const raw = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width + 'x' + screen.height,
+      screen.colorDepth,
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ].join('|');
+
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+      hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+      hash |= 0;
+    }
+    id = Math.abs(hash).toString(36) + Date.now().toString(36);
+    localStorage.setItem('device_fingerprint', id);
+  }
+  return id;
+}
+async function login() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('auth-msg');
+  const btn = document.getElementById('login-btn-text');
+
+  if (!username || !password) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'الرجاء إدخال اسم المستخدم وكلمة المرور';
+    return;
+  }
+
+  btn.innerHTML = 'جاري الدخول... <span class="spinner"></span>';
+
+  try {
+    const { data, error } = await sbClient
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .eq('password', password)
+      .single();
+
+    if (error || !data) {
+      msg.className = 'auth-msg error';
+      msg.textContent = '❌ اسم المستخدم أو كلمة المرور غير صحيحة';
+      btn.innerHTML = 'دخول ←';
+      return;
+    }
+
+    const currentDevice = getDeviceId();
+
+    if (data.device_id && data.device_id !== currentDevice) {
+      msg.className = 'auth-msg error';
+      msg.textContent = '❌ هذا الحساب مربوط بجهاز آخر، لا يمكن الدخول منه';
+      btn.innerHTML = 'دخول ←';
+      return;
+    }
+
+    if (!data.device_id) {
+      await sbClient
+        .from('users')
+        .update({ device_id: currentDevice })
+        .eq('id', data.id);
+      data.device_id = currentDevice;
+    }
+
+    currentUser = data;
+    localStorage.setItem('current_user', JSON.stringify(data));
+    showApp();
+
+  } catch(e) {
+    msg.className = 'auth-msg error';
+    msg.textContent = '❌ خطأ في الاتصال بقاعدة البيانات';
+    btn.innerHTML = 'دخول ←';
+  }
+}
+
+async function register() {
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const msg = document.getElementById('auth-msg');
+  const btn = document.getElementById('reg-btn-text');
+
+  if (!username || !password || !confirm) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'الرجاء تعبئة جميع الحقول';
+    return;
+  }
+
+  if (password.length < 6) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    return;
+  }
+
+  if (password !== confirm) {
+    msg.className = 'auth-msg error';
+    msg.textContent = 'كلمتا المرور غير متطابقتين';
+    return;
+  }
+
+  btn.innerHTML = 'جاري الإنشاء... <span class="spinner"></span>';
+
+  try {
+    const { data, error } = await sbClient
+      .from('users')
+      .insert([{ username, password }])
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === '23505') {
+        msg.className = 'auth-msg error';
+        msg.textContent = '❌ اسم المستخدم موجود مسبقاً';
+      } else {
+        msg.className = 'auth-msg error';
+        msg.textContent = '❌ خطأ: ' + error.message;
+      }
+      btn.innerHTML = 'إنشاء الحساب ←';
+      return;
+    }
+
+    msg.className = 'auth-msg success';
+    msg.textContent = '✅ تم إنشاء الحساب! جاري الدخول...';
+    currentUser = data;
+    localStorage.setItem('current_user', JSON.stringify(data));
+    setTimeout(showApp, 1000);
+  } catch(e) {
+    msg.className = 'auth-msg error';
+    msg.textContent = '❌ خطأ في الاتصال';
+    btn.innerHTML = 'إنشاء الحساب ←';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('current_user');
+  currentUser = null;
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('auth-msg').textContent = '';
+}
+
+function showApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  document.getElementById('display-username').textContent = currentUser.username;
+  loadResults();
+}
+
+// ===========================
+// NAVIGATION
+// ===========================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  event.target.classList.add('active');
+  if (page === 'results') loadResults();
+}
+
+// ===========================
+// QUIZ DATA
+// ===========================
+const quizzes = {
+  tenses: {
+    name: '⏰ اختبار الأزمنة',
+    questions: [
+      { q: 'My brother ___ to the park every day.', opts: ['go','goes','went','is going'], ans: 1, exp: 'Present Simple: he/she/it → V+s. "brother" = he → goes' },
+      { q: 'While she ___ to school, she had an accident.', opts: ['drives','drove','was driving','had driven'], ans: 2, exp: 'Past Continuous: while + was/were + V-ing' },
+      { q: 'I have just ___ my work.', opts: ['finish','finished','finishing','finishes'], ans: 1, exp: 'Present Perfect: have/has + V3' },
+      { q: 'The weather ___ very nice last week.', opts: ['is','was','has been','had been'], ans: 1, exp: 'Past Simple: last week → V2 (was)' },
+      { q: 'She ___ English for hours. She is tired.', opts: ['studies','studied','has been studying','had studied'], ans: 2, exp: 'Present Perfect Continuous: علامة tired + for' },
+      { q: 'He ___ his work before he went to bed.', opts: ['finishes','finished','has finished','had finished'], ans: 3, exp: 'Past Perfect: before + had + V3' },
+      { q: 'Don\'t shout! She ___.', opts: ['studies','studied','is studying','has studied'], ans: 2, exp: 'Present Continuous: الآن = is/am/are + V-ing' },
+      { q: 'I ___ in Syria since I was born.', opts: ['live','lived','have lived','am living'], ans: 2, exp: 'Present Perfect: since → have/has + V3' },
+      { q: 'Ali ___ law for three years.', opts: ['studies','studied','has studied','had studied'], ans: 2, exp: 'Present Perfect: for + فترة زمنية → have/has + V3' },
+      { q: 'When I get my results, I ___ you.', opts: ['call','called','will call','would call'], ans: 2, exp: 'After when/if في المستقبل، نستخدم Present في if clause وwill في main clause' },
+      { q: 'By 2018, many people ___ to Europe.', opts: ['migrate','migrated','had migrated','will migrate'], ans: 2, exp: 'Past Perfect: by + past time → had + V3' },
+      { q: 'We ___ ideas with our teacher at the moment.', opts: ['discuss','discussed','are discussing','have discussed'], ans: 2, exp: 'Present Continuous: at the moment' },
+      { q: 'They ___ tennis every day.', opts: ['play','plays','played','are playing'], ans: 0, exp: 'Present Simple: they → V1 بدون s' },
+      { q: 'My parents ___ hard when I arrived home.', opts: ['work','worked','were working','had worked'], ans: 2, exp: 'Past Continuous: when + حدث مفاجئ → were working' },
+      { q: 'I ___ fine if they ask me simple questions.', opts: ['be','am','will be','would be'], ans: 2, exp: 'First conditional: if + V1 → will + V1' },
+    ]
+  },
+  passive: {
+    name: '🔄 اختبار المبني للمجهول',
+    questions: [
+      { q: 'Ruba washes the dishes every day. (passive)', opts: ['The dishes were washed','The dishes are washed','The dishes have been washed','The dishes will be washed'], ans: 1, exp: 'Present Simple passive: am/is/are + V3' },
+      { q: 'Ruba washed the dishes yesterday. (passive)', opts: ['The dishes are washed','The dishes were washed','The dishes were being washed','The dishes had been washed'], ans: 1, exp: 'Past Simple passive: was/were + V3' },
+      { q: 'Ruba is washing the dishes now. (passive)', opts: ['are being washed','were being washed','have been washed','are washed'], ans: 0, exp: 'Present Continuous passive: am/is/are + being + V3' },
+      { q: 'She had prepared the meal before her mother arrived. (passive)', opts: ['The meal was prepared','The meal had been prepared','The meal has been prepared','The meal were prepared'], ans: 1, exp: 'Past Perfect passive: had + been + V3' },
+      { q: 'You must tidy the room. (passive)', opts: ['The room must tidied','The room must be tidied','The room must been tidied','The room must being tidied'], ans: 1, exp: 'Modal passive: modal + be + V3' },
+      { q: 'My boss has offered me a better job. (passive)', opts: ['I have been offered','I was offered','I had been offered','I am offered'], ans: 0, exp: 'Present Perfect passive: have/has + been + V3' },
+      { q: 'The builder is building the wall. (passive)', opts: ['The wall was being built','The wall is being built','The wall has been built','The wall is built'], ans: 1, exp: 'Present Continuous passive: is/are + being + V3' },
+      { q: 'The farmer was planting the trees when it rained. (passive)', opts: ['The trees were being planted','The trees are being planted','The trees were planted','The trees had been planted'], ans: 0, exp: 'Past Continuous passive: was/were + being + V3' },
+      { q: 'My brother will tidy the room. (passive)', opts: ['The room will tidied','The room will be tidied','The room would be tidied','The room is tidied'], ans: 1, exp: 'Future passive: will + be + V3' },
+      { q: 'My house ___ until tomorrow evening. (won\'t tidy — passive)', opts: ["won't be tidied","won't been tidied","won't tidied","isn't tidied"], ans: 0, exp: 'Future negative passive: won\'t + be + V3' },
+    ]
+  },
+  relative: {
+    name: '🔗 اختبار الأسماء الموصولة',
+    questions: [
+      { q: 'A plumber is a person ___ mends taps.', opts: ['which','who','whose','where'], ans: 1, exp: '"person" = عاقل → who' },
+      { q: 'This is the city in ___ Shakespeare was born.', opts: ['where','who','whose','which'], ans: 3, exp: 'بعد حرف جر + for things → which' },
+      { q: 'That is the author ___ books are interesting.', opts: ['who','when','whose','where'], ans: 2, exp: '"books" = ملكية المؤلف → whose' },
+      { q: 'I can still remember the day ___ he came to Syria.', opts: ['where','when','who','whose'], ans: 1, exp: '"day" = زمن → when' },
+      { q: 'This is my friend ___ car broke down.', opts: ['which','when','who','whose'], ans: 3, exp: '"car" = ملكية الصديق → whose' },
+      { q: 'I went to the city ___ Shakespeare was born.', opts: ['when','whose','who','where'], ans: 3, exp: '"city" = مكان → where' },
+      { q: 'That is the car ___ I bought yesterday.', opts: ['who','whose','which','when'], ans: 2, exp: '"car" = غير عاقل → which/that' },
+      { q: 'I visited my friend ___ lives in Damascus.', opts: ['which','whose','where','who'], ans: 3, exp: '"friend" = عاقل + subject → who' },
+      { q: 'A bodyguard is a person ___ protects important people.', opts: ['which','whose','where','who'], ans: 3, exp: '"person" = عاقل → who' },
+      { q: 'This is the museum ___ I visited last year.', opts: ['who','whose','when','which'], ans: 3, exp: '"museum" = غير عاقل → which' },
+    ]
+  },
+  conditional: {
+    name: '❓ اختبار الشرط والتمني',
+    questions: [
+      { q: 'If you work hard, you ___ money.', opts: ['would make','will make','made','would have made'], ans: 1, exp: 'First conditional: if + V1 → will + V1' },
+      { q: 'If I were you, I ___ help him.', opts: ['will','would','had','should'], ans: 1, exp: 'Second conditional: if + V2 → would + V1' },
+      { q: 'If you ___ studied, you would have passed.', opts: ['have','has','had','did'], ans: 2, exp: 'Third conditional: if + had + V3 → would have + V3' },
+      { q: 'My room is very small. (I wish)', opts: ['I wish my room isn\'t small','I wish my room wasn\'t small','I wish my room won\'t be small','I wish my room hasn\'t been small'], ans: 1, exp: 'Wish: الحاضر → الماضي: is → was/were' },
+      { q: 'I can\'t speak Spanish. (I wish)', opts: ['I wish I can speak','I wish I could speak','I wish I will speak','I wish I spoke'], ans: 1, exp: 'Wish: can → could' },
+      { q: 'I didn\'t go to the party. (I wish)', opts: ['I wish I didn\'t go','I wish I haven\'t gone','I wish I had gone','I wish I went'], ans: 2, exp: 'Wish about the past: V2 → had + V3' },
+      { q: 'They wouldn\'t have passed if they ___ hard.', opts: ["don't study","hadn't studied","won't study","wouldn't study"], ans: 1, exp: 'Third conditional negative: hadn\'t studied' },
+      { q: 'My neighbors are always arguing. (I wish)', opts: ['I wish they stop','I wish they would stop','I wish they stopped','I wish they had stopped'], ans: 1, exp: 'Wish للمستقبل/عادات مزعجة: would + V1' },
+      { q: 'I ___ fine as long as you help me. (First conditional)', opts: ['am','was','will be','would be'], ans: 2, exp: 'First conditional: as long as = if → will + V1' },
+      { q: 'If it ___ raining, we would go out.', opts: ['stops','stopped','had stopped','will stop'], ans: 1, exp: 'Second conditional: if + V2 → would + V1' },
+    ]
+  },
+  vocab: {
+    name: '📖 اختبار المفردات',
+    questions: [
+      { q: 'ما معنى كلمة "remuneration"؟', opts: ['إحباط','الأجر','توقعات','قدرة'], ans: 1, exp: 'Remuneration = الأجر والراتب' },
+      { q: 'ما الترجمة الصحيحة لـ "demotivation"؟', opts: ['التحفيز','التواضع','الإحباط','الغرور'], ans: 2, exp: 'Demotivation = الإحباط' },
+      { q: '"Keep up with" تعني:', opts: ['يستسلم','يواكب','يكمل','يواجه'], ans: 1, exp: 'Keep up with = يواكب، مثل: keep up with research' },
+      { q: '"Run into" تعني:', opts: ['يساعد','ينسجم','يواجه','يهتم'], ans: 2, exp: 'Run into = يواجه مشاكل' },
+      { q: 'ما معنى "aptitude"؟', opts: ['ثقة','توقعات','قدرة / موهبة','أولوية'], ans: 2, exp: 'Aptitude = القدرة والاستعداد الفطري' },
+      { q: '"Superstitions" تعني:', opts: ['اكتشافات','أساطير وخرافات','علاجات','جراثيم'], ans: 1, exp: 'Superstitions = الأساطير والخرافات' },
+      { q: 'ما معنى "mandatory"؟', opts: ['اختياري','إلزامي','دائم','ضروري'], ans: 1, exp: 'Mandatory = إلزامي' },
+      { q: '"Discrimination" تعني:', opts: ['المساواة','الديموقراطية','تمييز','تشريع'], ans: 2, exp: 'Discrimination = التمييز (العنصري أو غيره)' },
+      { q: 'ما معنى "excavation"؟', opts: ['البحر','القافية','حفريات','ملحمة'], ans: 2, exp: 'Excavation = الحفريات الأثرية' },
+      { q: '"Satire" تعني:', opts: ['يثير','يفسر','ينتقد بشكل ساخر','يستعيد'], ans: 2, exp: 'Satire = الأسلوب الساخر الناقد' },
+      { q: 'ما معنى "anatomy"؟', opts: ['جراثيم','التشريح','مضادات حيوية','التهاب'], ans: 1, exp: 'Anatomy = علم التشريح' },
+      { q: '"Humanitarian" تعني:', opts: ['إرهابي','إنساني','عسكري','اقتصادي'], ans: 1, exp: 'Humanitarian = إنساني' },
+    ]
+  },
+  mixed: {
+    name: '🎲 اختبار مختلط شامل',
+    questions: [
+      { q: 'The word which has a final /t/ sound is:', opts: ['needed','washed','mended','ordered'], ans: 1, exp: '"Washed" تنتهي بصوت /t/ لأن d تأتي بعد صوت غير مجهور (voiceless)' },
+      { q: 'The word which has elision is:', opts: ['perfect','hands','lady','landlady'], ans: 3, exp: '"landlady" → حرف d محصور بين حرفين ساكنين → لا يُنطق' },
+      { q: '___ my brother nor my sister is here.', opts: ['Either','Neither','Both','Not only'], ans: 1, exp: 'Neither...nor = لا هذا ولا ذاك' },
+      { q: 'Never ___ been to another country.', opts: ['I have','I had','have I','had I'], ans: 2, exp: 'Inversion: Never + فعل مساعد + فاعل' },
+      { q: 'You ___ smoke here. This is forbidden.', opts: ['should','don\'t have to','mustn\'t','have to'], ans: 2, exp: 'Forbidden = ممنوع = mustn\'t' },
+      { q: '"I live in Syria." He said...', opts: ['he lives in Syria','he lived in Syria','he has lived in Syria','he had lived in Syria'], ans: 1, exp: 'Reported Speech: lives → lived' },
+      { q: 'A bodyguard is a person ___ protects important people.', opts: ['which','whose','where','who'], ans: 3, exp: '"person" = عاقل → who' },
+      { q: 'If I ___ you, I would help him.', opts: ['am','was','were','had been'], ans: 2, exp: 'Second conditional: if + were (ليس was) مع I' },
+      { q: 'My father has been repairing the car. He ___.', opts: ['is tired','was tired','will be tired','had been tired'], ans: 0, exp: 'Present Perfect Continuous → دليل: tired' },
+      { q: 'The dishes ___ already by Ruba.', opts: ['have washed','have been washed','had washed','were washing'], ans: 1, exp: 'Present Perfect Passive: have/has + been + V3' },
+      { q: '"Run into" means:', opts: ['to help','to keep up','to face problems','to complete'], ans: 2, exp: 'Run into = يواجه مشاكل' },
+      { q: 'I wish I ___ go to the party yesterday.', opts: ['could','can','had been able to','would'], ans: 2, exp: 'Wish about the past: had + been able to' },
+      { q: '___ my father ___ my mother is going to the party.', opts: ['Either...and','Neither...nor','Both...or','Not only...and'], ans: 1, exp: 'Neither...nor = لا هذا ولا ذاك' },
+      { q: 'Rarely ___ chess.', opts: ['he plays','does he plays','does he play','he play'], ans: 2, exp: 'Inversion: Rarely + does + subject + V1' },
+      { q: 'In Britain, you ___ drive on the left.', opts: ['have to','should','shouldn\'t','mustn\'t'], ans: 0, exp: 'في بريطانيا، القيادة يساراً قانون = have to' },
+      { q: 'That is my friend ___ car broke down.', opts: ['who','which','whose','where'], ans: 2, exp: '"car" = ملكية → whose' },
+      { q: 'He is brilliant ___ maths.', opts: ['in','of','from','at'], ans: 3, exp: 'Brilliant at = ماهر في' },
+      { q: 'My sister won\'t tidy her own room. (causative)', opts: ["My sister won't have the room tidied","My sister doesn't have the room tidied","My sister won't tidy the room herself","My sister hasn't tidied the room"], ans: 0, exp: "Causative future: won't have + noun + V3" },
+      { q: 'She has been living in Syria since she was born. (question)', opts: ['How long she has been living?','How long has she been living?','Since when she has been living?','How she has been living?'], ans: 1, exp: 'How long → How long + has/have + subject + been + V-ing?' },
+      { q: '"Stepping stone" means:', opts: ['حجر الأساس','نقطة الانطلاق والإلهام','العقبة','الحجر الثمين'], ans: 1, exp: 'Stepping stone = نقطة الانطلاق (مرحلة تقود للنجاح)' },
+    ]
+  }
+};
+
+// ===========================
+// QUIZ FUNCTIONS
+// ===========================
+function startQuiz(name) {
+  currentQuizName = name;
+  currentQuizData = shuffle([...quizzes[name].questions]);
+  currentQuizIndex = 0;
+  currentQuizScore = 0;
+  answered = false;
+
+  document.getElementById('quiz-selector').style.display = 'none';
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('score-display').classList.remove('show');
+  document.getElementById('quiz-title').textContent = quizzes[name].name;
+  renderQuestion();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function renderQuestion() {
+  const q = currentQuizData[currentQuizIndex];
+  const total = currentQuizData.length;
+  answered = false;
+
+  document.getElementById('quiz-progress').textContent = `${currentQuizIndex + 1} / ${total}`;
+  document.getElementById('progress-fill').style.width = `${((currentQuizIndex) / total) * 100}%`;
+  document.getElementById('question-text').textContent = q.q;
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').textContent = '';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(i, q.ans, q.exp);
+    container.appendChild(btn);
+  });
+}
+
+function selectAnswer(chosen, correct, exp) {
+  if (answered) return;
+  answered = true;
+
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === correct) opt.classList.add('correct');
+    else if (i === chosen) opt.classList.add('wrong');
+  });
+
+  if (chosen === correct) currentQuizScore++;
+
+  const expEl = document.getElementById('explanation');
+  expEl.textContent = '💡 ' + exp;
+  expEl.classList.add('show');
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.style.display = 'block';
+  if (currentQuizIndex === currentQuizData.length - 1) {
+    nextBtn.textContent = '🏁 إنهاء الاختبار';
+  } else {
+    nextBtn.textContent = 'التالي ←';
+  }
+}
+
+function nextQuestion() {
+  if (!answered) return;
+  currentQuizIndex++;
+  if (currentQuizIndex >= currentQuizData.length) {
+    showScore();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showScore() {
+  document.getElementById('score-display').classList.add('show');
+  document.getElementById('quiz-area').querySelector('.quiz-card').style.display = 'none';
+
+  const pct = Math.round((currentQuizScore / currentQuizData.length) * 100);
+  document.getElementById('score-num').textContent = currentQuizScore;
+  document.getElementById('score-total').textContent = currentQuizData.length;
+
+  let msg, sub;
+  if (pct >= 90) { msg = '🏆 ممتاز!'; sub = 'أداء رائع، استمر هكذا!'; }
+  else if (pct >= 75) { msg = '👏 جيد جداً!'; sub = 'نتيجة جيدة، مع قليل من المراجعة ستصل للقمة'; }
+  else if (pct >= 60) { msg = '👍 جيد'; sub = 'راجع الأجزاء التي أخطأت فيها وأعد المحاولة'; }
+  else { msg = '📚 تحتاج مزيداً من المراجعة'; sub = 'لا تستسلم! راجع الشرح وأعد الاختبار'; }
+
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  saveResult(currentQuizName, currentQuizScore, currentQuizData.length);
+}
+
+async function saveResult(quizName, score, total) {
+  if (!currentUser || !sbClient) return;
+  try {
+    await sbClient.from('quiz_results').insert([{
+      user_id: currentUser.id,
+      quiz_name: quizzes[quizName].name,
+      score,
+      total
+    }]);
+  } catch(e) {}
+}
+
+function restartQuiz() {
+  document.getElementById('score-display').classList.remove('show');
+  document.getElementById('quiz-area').querySelector('.quiz-card').style.display = 'block';
+  startQuiz(currentQuizName);
+}
+
+function backToSelector() {
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('quiz-selector').style.display = 'grid';
+  document.getElementById('score-display').classList.remove('show');
+  if (document.querySelector('.quiz-card')) {
+    document.getElementById('quiz-area').querySelector('.quiz-card').style.display = 'block';
+  }
+}
+
+// ===========================
+// RESULTS
+// ===========================
+async function loadResults() {
+  if (!currentUser || !sbClient) return;
+  const container = document.getElementById('results-content');
+
+  try {
+    const { data, error } = await sbClient
+      .from('quiz_results')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error || !data || data.length === 0) {
+      container.innerHTML = '<p style="color:rgba(232,224,208,0.5); text-align:center; padding:30px;">لا توجد نتائج بعد. ابدأ اختباراً لتظهر هنا!</p>';
+      return;
+    }
+
+    let html = '<table class="nice-table"><tr><th>الاختبار</th><th>النتيجة</th><th>النسبة</th><th>التاريخ</th></tr>';
+    data.forEach(r => {
+      const pct = Math.round((r.score / r.total) * 100);
+      const color = pct >= 75 ? 'var(--green)' : pct >= 60 ? 'var(--gold)' : 'var(--red)';
+      const date = new Date(r.created_at).toLocaleDateString('ar-SY');
+      html += `<tr>
+        <td>${r.quiz_name}</td>
+        <td style="direction:ltr;">${r.score} / ${r.total}</td>
+        <td style="color:${color}; font-weight:700;">${pct}%</td>
+        <td>${date}</td>
+      </tr>`;
+    });
+    html += '</table>';
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = '<p style="color:rgba(232,224,208,0.5); text-align:center; padding:30px;">خطأ في تحميل النتائج</p>';
+  }
+}
+
+// Start
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
